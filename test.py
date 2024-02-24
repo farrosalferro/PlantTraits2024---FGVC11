@@ -7,7 +7,7 @@ import model.loss as module_loss
 import model.metric as module_metric
 import model.model as module_arch
 from parse_config import ConfigParser
-from submission import Submission as module_submission
+from utils import Submission as module_submission
 
 
 def main(config):
