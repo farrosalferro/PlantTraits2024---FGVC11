@@ -1,0 +1,8 @@
+# ignore all files with .jpeg extension
+data
+*.ipynb
+*.pth
+*.wumbo
+__pycache__
+saved
+submission
