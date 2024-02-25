@@ -226,7 +226,7 @@ If you have additional information to be logged, in `_train_epoch()` of your tra
 You can test trained model by running `test.py` passing path to the trained checkpoint by `--resume` argument and save the prediction by `--submit_filename`:
 
 ```
-python test.py --configs /path/to/config --resume /path/to/checkpoint --submit_filename 'submission.csv'
+python test.py --configs /path/to/config --resume /path/to/checkpoint --submit_filename submission.csv
 ```
 the submission file will be saved inside the `submission/exp_name/` folder where `exp_name` is the value of `name` key inside the `config.json`
 

@@ -75,6 +75,11 @@ if __name__ == '__main__':
                       default=None,
                       type=str,
                       help='indices of GPUs to enable (default: all)')
+    args.add_argument('-f',
+                      '--submit_filename',
+                      default='submission.csv',
+                      type=str,
+                      help='submission file name (default: submission.csv)')
 
     # custom cli options to modify configuration from default values given in json file.
     CustomArgs = collections.namedtuple('CustomArgs', 'flags type target')
