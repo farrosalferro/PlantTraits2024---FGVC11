@@ -40,7 +40,7 @@ def main(config):
     regularizer = config['trainer']['regularization']
 
     # build submission
-    submission = module_submission()
+    submission = module_submission(config['data_loader']['args']['data_dir'])
 
     # prepare model for testing
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

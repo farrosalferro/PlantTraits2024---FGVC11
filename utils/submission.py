@@ -5,12 +5,12 @@ import os
 
 
 class Submission:
-    def __init__(self):
+    def __init__(self, data_dir):
         self.preds = []
         self.class_names = ['X4_mean', 'X11_mean', 'X18_mean',
                    'X26_mean', 'X50_mean', 'X3112_mean',]
-        self.pred_df = pd.read_csv('data/test.csv')
-        self.submit_df = pd.read_csv('data/sample_submission.csv')
+        self.pred_df = pd.read_csv(f'{data_dir}/test.csv')
+        self.submit_df = pd.read_csv(f'{data_dir}/sample_submission.csv')
 
     def submit(self, model_name, file_name):
         pred_df = self.pred_df[['id']].copy()
