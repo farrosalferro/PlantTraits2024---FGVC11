@@ -20,15 +20,25 @@ https://www.nature.com/articles/s41559-022-01904-x
 * *Moles, A.T., Xirocostas, Z.A. Statistical power from the people. Nat Ecol Evol 6, 1802–1803 (2022).*
 https://www.nature.com/articles/s41559-022-01902-z
 
-## Requirements
-* Python == 3.10.13
-* PyTorch == 2.0.1
-* Torchvision == 0.15.2
-* tqdm == 4.66.2
-* Numpy == 1.26.4
-* Pandas == 2.2.0
-* Scikit-learn == 1.4.0
-* Tensorboard == 2.16.2 (see [Tensorboard Visualization](#tensorboard-visualization))
+## Installation
+### Clone this repository
+```bash
+git clone https://github.com/farrosalferro/PlantTraits2024---FGVC11.git
+cd PlantTraits2024---FGVC11
+conda env create -f environment.yml
+conda activate planttraits2024
+```
+
+### Download the dataset
+Download the dataset from the competition page [here](https://www.kaggle.com/competitions/planttraits2024/data) and extract it to the `data` (you have to create it first) folder.
+
+or use the kaggle api to download the dataset
+```bash
+mkdir data
+cd data
+kaggle competitions download -c planttraits2024
+unzip planttraits2024.zip
+```
 
 ## Folder Structure
   ```
@@ -51,6 +61,12 @@ https://www.nature.com/articles/s41559-022-01902-z
   │   └── data_loaders.py
   │
   ├── data/ - default directory for storing input data
+  │   ├── test_images
+  │   ├── train_images
+  │   ├── sample_submission.csv
+  │   ├── target_name_meta.tsv
+  │   ├── test.csv
+  │   └── train.csv
   │
   ├── model/ - models, losses, and metrics
   │   ├── model.py
