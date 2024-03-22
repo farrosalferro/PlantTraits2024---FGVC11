@@ -15,7 +15,8 @@ def main(config):
 
     # setup data_loader instances
     data_loader = getattr(module_data, config['data_loader']['type'])(
-        config['data_loader']['args']['data_dir'],
+        tabular_data_dir=config['data_loader']['args']['tabular_data_dir'],
+        image_data_dir=config['data_loader']['args']['image_data_dir'],
         img_size=config['data_loader']['args']['img_size'],
         batch_size=512,
         shuffle=False,
@@ -40,7 +41,7 @@ def main(config):
     regularizer = config['trainer']['regularization']
 
     # build submission
-    submission = module_submission(config['data_loader']['args']['data_dir'])
+    submission = module_submission(config['data_loader']['args']['tabular_data_dir'])
 
     # prepare model for testing
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -82,7 +83,8 @@ def main(config):
 
     # create submission file
     submission.preds = np.concatenate(preds)
-    submission.submit(config['name'], config.submit_filename)
+    # submission.submit(config['name'], config.submit_filename)
+    submission.export(config.submit_filename)
 
 
 if __name__ == '__main__':

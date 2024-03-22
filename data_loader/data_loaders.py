@@ -2,7 +2,7 @@ from torchvision import datasets, transforms
 import torch
 from skimage import io
 from torch.utils.data import Dataset
-from base import BaseDataLoader
+from base.base_data_loader import BaseDataLoader
 import pandas as pd
 import numpy as np
 import os
@@ -15,7 +15,8 @@ class PlantTraitsDataLoader(BaseDataLoader):
     """
 
     def __init__(self,
-                 data_dir,
+                 tabular_data_dir,
+                 image_data_dir,
                  batch_size,
                  img_size,
                  shuffle=True,
@@ -25,7 +26,8 @@ class PlantTraitsDataLoader(BaseDataLoader):
 
         # initalize input attributes
         self.img_size = self._is_tuple(img_size)
-        self.data_dir = data_dir
+        self.tabular_data_dir = tabular_data_dir
+        self.image_data_dir = image_data_dir
         self.is_training = training
 
         # class names
@@ -62,34 +64,28 @@ class PlantTraitsDataLoader(BaseDataLoader):
                                     with_labels=self.is_training)
 
     def load_tabular_data(self):
-        train_data = self._read_csv('train')
-        train_aux_mean = train_data.loc[:, self.aux_class_names].mean()
-        train_data.loc[:, self.
-                       aux_class_names] = train_data.loc[:, self.
-                                                         aux_class_names].fillna(
-                                                             train_aux_mean)
-
-        test_data = self._read_csv('test')
-
-        FEATURES_COLS = test_data.columns[1:-1]
-
-        scaler = StandardScaler()
-
-        self.features = scaler.fit_transform(train_data[FEATURES_COLS].values)
 
         if self.is_training:
-            tabular_data = train_data
+            train_data = self._read_csv('train')
+            train_aux_mean = train_data.loc[:, self.aux_class_names].mean()
+            train_data.loc[:, self.
+                        aux_class_names] = train_data.loc[:, self.
+                                                            aux_class_names].fillna(
+                                                                train_aux_mean)
+            self.features = train_data.drop(columns=self.class_names + self.aux_class_names + ['id'] + ['image_path']).columns
+            return train_data
+        
         else:
-            tabular_data = test_data
-            self.features = scaler.transform(test_data[FEATURES_COLS].values)
+            test_data = self._read_csv('test')
+            self.features = test_data.columns[1:-1]
+            return test_data
 
-        return tabular_data
 
     def _read_csv(self, type):
-        path = os.path.join(self.data_dir, type + '.csv')
+        path = os.path.join(self.tabular_data_dir, type + '.csv')
         tabular_data = pd.read_csv(path)
         tabular_data[
-            'image_path'] = f'{self.data_dir}/{type}_images/' + tabular_data[
+            'image_path'] = f'{self.image_data_dir}/{type}_images/' + tabular_data[
                 'id'].astype(str) + '.jpeg'
         return tabular_data
 
@@ -118,7 +114,7 @@ class PlantDataset(Dataset):
 
     def __init__(self,
                  df,
-                 features,
+                 feature_names,
                  class_names,
                  aux_class_names,
                  image_size,
@@ -129,7 +125,7 @@ class PlantDataset(Dataset):
         self.class_names = class_names
         self.aux_class_names = aux_class_names
         self.img_transform = img_transform
-        self.all_features = features
+        self.feature_names = feature_names
         self.image_size = image_size
         self.with_labels = with_labels
 
@@ -140,7 +136,7 @@ class PlantDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        features = torch.tensor(self.all_features[idx], dtype=torch.float32)
+        features = torch.tensor(self.df.loc[idx, self.feature_names], dtype=torch.float32)
 
         labels = torch.tensor([0], dtype=torch.float32)
         aux_labels = torch.tensor([0], dtype=torch.float32)

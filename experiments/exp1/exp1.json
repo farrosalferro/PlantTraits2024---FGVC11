@@ -1,0 +1,63 @@
+{
+    "name": "PlantTraitsModel_Resnet_Dense_attention",
+    "n_gpu": 1,
+    "arch": {
+        "type": "PlantTraitsModel_Resnet_Dense_attention",
+        "args": {
+            "input_dim": 163,
+            "num_classes": 6,
+            "embed_dim": 64,
+            "num_heads": 8,
+            "hidden_dim": [
+                64,
+                128,
+                256,
+                128,
+                64
+            ],
+            "dropout": 0.5
+        }
+    },
+    "data_loader": {
+        "type": "PlantTraitsDataLoader",
+        "args": {
+            "tabular_data_dir": "experiments/exp1",
+            "image_data_dir": "data/",
+            "batch_size": 32,
+            "img_size": 224,
+            "shuffle": true,
+            "validation_split": 0.1,
+            "num_workers": 4,
+            "training": "True"
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 0.001,
+            "weight_decay": 0.0001,
+            "amsgrad": true
+        }
+    },
+    "loss": "R2Loss",
+    "metrics": [
+        "R2Metrics"
+    ],
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "step_size": 50,
+            "gamma": 0.5
+        }
+    },
+    "trainer": {
+        "epochs": 10,
+        "save_dir": "experiments/exp1/",
+        "regularization": 0.4,
+        "save_period": 1,
+        "verbosity": 2,
+        "monitor": "min val_loss",
+        "early_stop": 10,
+        "tensorboard": true
+    }
+}

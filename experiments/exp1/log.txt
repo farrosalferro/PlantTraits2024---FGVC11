@@ -1,0 +1,5 @@
+Cleaned the target columns by removing the outliers (values greater than 1.5 times the interquartile range from the median) and the missing values.
+Apply minmax scaler to the target columns.
+Use ResNet + Attention model to predict the target columns.
+
+Got public score of -0.02023
