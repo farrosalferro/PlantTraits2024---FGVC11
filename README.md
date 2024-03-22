@@ -106,15 +106,15 @@ unzip planttraits2024.zip
 Config files are in `.json` format:
 ```javascript
 {
-    "name": "PlantTraitsModel_ViTb_Dense",
+    "name": "PlantTraitsModel_Resnet_Dense_attention",
     "n_gpu": 1,
     "arch": {
-        "type": "PlantTraitsModel_ViTb_Dense",
+        "type": "PlantTraitsModel_Resnet_Dense_attention", // change this according to your model
         "args": {
             "input_dim": 163,
             "num_classes": 6,
-            "image_output_dim": 64,
-            "tabular_output_dim": 64,
+            "embed_dim": 64,
+            "num_heads": 8,
             "hidden_dim": [
                 64,
                 128,
@@ -128,7 +128,8 @@ Config files are in `.json` format:
     "data_loader": {
         "type": "PlantTraitsDataLoader",
         "args": {
-            "data_dir": "data/",
+            "tabular_data_dir": "experiments/exp1", // change this to current experiment folder
+            "image_data_dir": "data/",
             "batch_size": 32,
             "img_size": 224,
             "shuffle": true,
@@ -157,8 +158,8 @@ Config files are in `.json` format:
         }
     },
     "trainer": {
-        "epochs": 2,
-        "save_dir": "saved/",
+        "epochs": 10,
+        "save_dir": "experiments/exp1/", // change this to current experiment folder
         "regularization": 0.4,
         "save_period": 1,
         "verbosity": 2,
@@ -170,22 +171,18 @@ Config files are in `.json` format:
 ```
 Add addional configurations if you need.
 ### How to Use
-After you have finished experimenting on the tabular dataset, export your `train.csv` and `test.csv` to your current experimentation folder. Take a look at the notebook `experiments/exp1/data_analysis.ipynb` as an example. Then you train your model using the training dataset with the following command:
+After you have finished experimenting on the tabular dataset, export your `train.csv` and `test.csv` to your current experimentation folder. Take a look at the notebook `experiments/exp1/data_analysis.ipynb` as an example. Do not forget to set the `tabular_data_dir` and `save_dir` in the config file to the current folder. Then you train your model using the training dataset with the following command:
   ```
-  python train.py --config /path/to/your/experiment/folder/expn.json
+  python train.py --config /path/to/your/experiment/exp_n/exp_n.json
   ```
-Then you will see the `model` and `log` folders inside your experiment folder, where `model` folder contains your trained model and `log` contains the logging file. 
+you will see the `model` and `log` folders inside your experiment folder, where `model` folder contains your trained model and `log` contains the logging file, respectively. 
 
+Then you test your model on the modified test set by running:
+  ```
+  python test.py --config /path/to/your/experiment/exp_n/exp_n.json --resume /path/to/your/experiment/expn/model/your_chosen_model.pth
+  ```
+you will see the result of your model in `results.csv` inside the experiment folder. Then re-modified (inverse scaling, inverse normalizing, etc.) the results by running the last cell of the notebook file and export it to a `.csv` file. Finally submit that file.
 
-Modify the configurations in `.json` config files, then run:
-  ```
-  python train.py --config config.json
-  ```
-### Resuming from checkpoints
-You can resume from a previously saved checkpoint by:
-  ```
-  python train.py --resume path/to/checkpoint
-  ```
 ### Using Multiple GPU
 You can enable multi-GPU training by setting `n_gpu` argument of the config file to larger number.
 If configured to use smaller number of gpu than available, first n devices will be used by default.
