@@ -106,7 +106,7 @@ if __name__ == '__main__':
                       help='indices of GPUs to enable (default: all)')
     args.add_argument('-f',
                       '--submit_filename',
-                      default='submission.csv',
+                      default='results.csv',
                       type=str,
                       help='submission file name (default: submission.csv)')
 
