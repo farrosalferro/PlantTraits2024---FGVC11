@@ -47,7 +47,6 @@ unzip planttraits2024.zip
   ├── train.py - main script to start training
   ├── test.py - evaluation of trained model
   │
-  ├── config.json - holds configuration for training
   ├── parse_config.py - class to handle config file and cli options
   │
   ├── new_project.py - initialize new project with template files
@@ -67,6 +66,18 @@ unzip planttraits2024.zip
   │   ├── target_name_meta.tsv
   │   ├── test.csv
   │   └── train.csv
+  │
+  ├── experiments/ - directory to perform experimentations
+  │   ├── exp1/ - experiment 1
+  │       ├── exp1.json - experiment 1 configuration file
+  │       ├── data_analysis.ipynb - jupyter file for experiment 1
+  │       ├── log.txt - text to record the experiment and result
+  │       ├── train.csv - modified train file
+  │       ├── test.csv - modified test file
+  │       ├── results.csv - experiment (test.py) output
+  │       └── submission.csv - file to be submitted
+  │   ├── exp2/ - experiment 2
+  │   └── expn/ - experiment n
   │
   ├── model/ - models, losses, and metrics
   │   ├── model.py
@@ -158,7 +169,14 @@ Config files are in `.json` format:
 }
 ```
 Add addional configurations if you need.
-### Using config files
+### How to Use
+After you have finished experimenting on the tabular dataset, export your `train.csv` and `test.csv` to your current experimentation folder. Take a look at the notebook `experiments/exp1/data_analysis.ipynb` as an example. Then you train your model using the training dataset with the following command:
+  ```
+  python train.py --config /path/to/your/experiment/folder/expn.json
+  ```
+Then you will see the `model` and `log` folders inside your experiment folder, where `model` folder contains your trained model and `log` contains the logging file. 
+
+
 Modify the configurations in `.json` config files, then run:
   ```
   python train.py --config config.json
